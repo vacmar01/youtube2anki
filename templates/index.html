@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- load vue js from cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        #app {
+            margin: 0 auto;
+            padding: 1.5rem;
+            max-width: 960px;
+            font-family: monospace;
+            font-size: 1.125rem;
+        }
+
+        #app h1 {
+            text-align: center;
+        }
+
+
+        .form {
+            text-align: center;
+        }
+
+        #app input {
+            padding: 0.5rem;
+            font-size: 1.125rem;
+            font-family: monospace
+        }
+
+        #app button {
+            padding: 0.5rem;
+            font-size: 1.125rem;
+            font-family: monospace
+        }
+
+        /* loading indicator */
+
+        .loader,
+        .loader:after {
+            border-radius: 50%;
+            width: 5em;
+            height: 5em;
+        }
+
+        .loader {
+            background-color: black;
+            margin: 60px auto;
+            font-size: 10px;
+            position: relative;
+            text-indent: -9999em;
+            border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+            border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+            border-left: 1.1em solid #ffffff;
+            transform: translateZ(0);
+            animation: load8 2.1s infinite linear;
+        }
+
+        @keyframes load8 {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        /* end loading indicator */
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h1>Youtube => Anki</h1>
+        <div class="form">
+            <input type="text" name="id" id="id" v-model="id" placeholder="Youtube ID">
+            <button @click="getQAs">Generate Q/As</button>
+        </div>
+        <!-- loading indicator -->
+        <div v-if="loading" class="loader"></div>
+        <div v-if="loading" style="margin-top: 0.5rem; text-align:center;">Computing for [[loadingSeconds]]s...(this takes ca. 30s)</div>
+        <!-- end loading indicator -->
+        <div v-if="finished && !loading">
+            <h2>Question/Answer Pairs</h2>
+            <button @click="generateCSV">Download .txt file</button>
+            <div v-for="qa in questionAnswers">
+                <h3>[[ qa.question ]]</h3>
+                <p>[[ qa.answer ]]</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const app = new Vue({
+            el: '#app',
+            delimiters: ['[[', ']]'],
+            data: {
+                questionAnswers: [],
+                id: 'MyFrMFab6bo',
+                loading: false,
+                loadingSeconds: 0,
+                intervalId: null,
+                finished: false
+            },
+            methods: {
+                // call localhost:5000/anki to get all qas using async await
+                async getQAs() {
+                    this.startLoading();
+                    const response = await fetch('/api/anki?id=' + this.id);
+                    const json = await response.json();
+                    this.questionAnswers = json;
+                    this.stopLoading();
+                },
+                generateCSV() {
+                    // generate csv file from questionAnswers
+                    // https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
+                    var csv = '';
+                    this.questionAnswers.forEach(function (row) {
+                        csv += row.question;
+                        csv += ';';
+                        csv += row.answer;
+                        csv += "\n";
+                    });
+
+                    var hiddenElement = document.createElement('a');
+                    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+                    hiddenElement.target = '_blank';
+                    hiddenElement.download = 'anki.txt';
+                    hiddenElement.click();
+                },
+                startLoading() {
+                    this.loading = true;
+                    this.finished = false;
+                    this.loadingSeconds = 0;
+                    this.intervalId = setInterval(() => {
+                        this.loadingSeconds++;
+                    }, 1000);
+                },
+                stopLoading() {
+                    this.loading = false;
+                    this.finished = true;
+                    clearInterval(this.intervalId);
+                    this.loadingSeconds = 0;
+                }
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>
