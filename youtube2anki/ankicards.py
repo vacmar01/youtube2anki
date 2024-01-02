@@ -44,8 +44,3 @@ class AnkiCards:
                 print("Error")
                 print(outp_text)
         return results
-        # df = pd.DataFrame(results)
-        # details = self.youtube_client.get_details(id)
-        # output_file = sluggify(details["items"][0]["snippet"]["title"])
-
-        # df.to_csv(output_file + ".txt", index=False, sep=";", header=False)

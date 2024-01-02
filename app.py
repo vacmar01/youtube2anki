@@ -10,9 +10,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-youtube_api_key = os.getenv('youtube_api_key')
-together_api_key = os.getenv('together_api_key')
-together_session_id = os.getenv('together_session_key')
+youtube_api_key = os.getenv('YOUTUBE_API_KEY')
+together_api_key = os.getenv('TOGETHER_API_KEY')
+together_session_id = os.getenv('TOGETHER_SESSION_ID')
 
 app = Flask(__name__)
 

@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,macos,flask
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,macos,flask
 
+### misc ###
+todos.md
+
 ### Flask ###
 instance/*
 !instance/.gitignore
