@@ -1,0 +1,4 @@
+youtube-transcript-api==0.6.1
+tqdm==4.66.1
+pandas==1.5.3
+Flask==2.2.3
