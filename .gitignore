@@ -301,3 +301,4 @@ pyrightconfig.json
 fly.toml
 Procfile
 .dockerignore
+*.ipynb

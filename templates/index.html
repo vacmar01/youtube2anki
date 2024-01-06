@@ -13,7 +13,9 @@
 <body>
     <div id="app">
         <h1>Youtube2Anki</h1>
-        <p>Enter a youtube url below. This app will generate questions and their answers that let's you test your understanding of the topic.</p>
+        <p>Enter a youtube url below. This app will generate questions and their answers that let's you test your understanding of the topic. 
+            You can download the questions and answers as a text file. 
+            This text file can be imported into Anki with each question/answer pair being a card.</p>
         <div class="form">
             <input type="text" name="url" id="url" v-model="url" placeholder="Youtube URL">
             <button @click="getQAs">Generate Q/As</button>
