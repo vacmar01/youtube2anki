@@ -12,9 +12,10 @@
 
 <body>
     <div id="app">
-        <h1>Youtube => Anki</h1>
+        <h1>Youtube2Anki</h1>
+        <p>Enter a youtube url below. This app will generate questions and their answers that let's you test your understanding of the topic.</p>
         <div class="form">
-            <input type="text" name="id" id="id" v-model="id" placeholder="Youtube ID">
+            <input type="text" name="url" id="url" v-model="url" placeholder="Youtube URL">
             <button @click="getQAs">Generate Q/As</button>
         </div>
         <!-- loading indicator -->

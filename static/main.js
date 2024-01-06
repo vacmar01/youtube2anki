@@ -3,7 +3,7 @@ const app = new Vue({
     delimiters: ['[[', ']]'],
     data: {
         questionAnswers: [],
-        id: 'MyFrMFab6bo',
+        url: '',
         loading: false,
         loadingSeconds: 0,
         intervalId: null,
@@ -13,7 +13,7 @@ const app = new Vue({
         // call localhost:5000/anki to get all qas using async await
         async getQAs() {
             this.startLoading();
-            const response = await fetch('/api/anki?id=' + this.id);
+            const response = await fetch('/api/anki?id=' + this.youtubeId);
             const json = await response.json();
             this.questionAnswers = json;
             this.stopLoading();
@@ -48,7 +48,15 @@ const app = new Vue({
             this.finished = true;
             clearInterval(this.intervalId);
             this.loadingSeconds = 0;
-        }
+        },
+
+    },
+    computed: {
+        // extract the youtube video id from the url, make sure that other get params are not included
+        youtubeId() {
+            const url = new URL(this.url);
+            return url.searchParams.get('v');
+        },
     }
 })
 
