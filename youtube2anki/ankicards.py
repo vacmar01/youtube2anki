@@ -22,7 +22,10 @@ class AnkiCards:
         """
         
     def generate(self, id, block_size=4096*4):
-        transcript = self.youtube_client.get_transcript(id)
+        try:
+            transcript = self.youtube_client.get_transcript(id)
+        except Exception as e:
+            return e
         results = []
 
         n_blocks = ceil(len(transcript) / block_size)

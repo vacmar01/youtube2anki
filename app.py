@@ -29,4 +29,10 @@ def index():
 @app.route("/api/anki", methods=["GET"])
 def generate():
     id = request.args.get('id')
-    return jsonify(ak.generate(id))
+    try: 
+        qas = ak.generate(id)
+        return jsonify(qas)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        
+    

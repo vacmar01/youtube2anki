@@ -7,13 +7,21 @@ const app = new Vue({
         loading: false,
         loadingSeconds: 0,
         intervalId: null,
-        finished: false
+        finished: false,
+        error: ''
     },
     methods: {
         // call localhost:5000/anki to get all qas using async await
         async getQAs() {
             this.startLoading();
+            this.error = '';
             const response = await fetch('/api/anki?id=' + this.youtubeId);
+            if (response.status === 500) {
+                this.error = 'There was an error processing your request. Please make sure you enter a valid YouTube URL.';
+                this.loading = false;
+                this.finished = false;
+                return;
+            }
             const json = await response.json();
             this.questionAnswers = json;
             this.stopLoading();
@@ -52,8 +60,11 @@ const app = new Vue({
 
     },
     computed: {
-        // extract the youtube video id from the url, make sure that other get params are not included
         youtubeId() {
+            if (this.url.includes('youtu.be')) {
+                return this.url.split('/').pop().split('?')[0];
+            }
+
             const url = new URL(this.url);
             return url.searchParams.get('v');
         },

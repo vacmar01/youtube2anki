@@ -20,6 +20,7 @@
             <input type="text" name="url" id="url" v-model="url" placeholder="Youtube URL">
             <button @click="getQAs">Generate Q/As</button>
         </div>
+        <div v-if="error">Error: [[error]]</div>
         <!-- loading indicator -->
         <div v-if="loading" class="loader"></div>
         <div v-if="loading" style="margin-top: 0.5rem; text-align:center;">Computing for [[ loadingSeconds ]]s...(this takes ca. 30s)</div>
