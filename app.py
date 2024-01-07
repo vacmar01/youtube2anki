@@ -5,6 +5,7 @@ from youtube2anki.clients import YoutubeClient, LLMClient
 from youtube2anki.ankicards import AnkiCards
 import os
 import json
+from math import ceil
 
 from dotenv import load_dotenv
 
@@ -29,8 +30,16 @@ def index():
 @app.route("/api/anki", methods=["GET"])
 def generate():
     id = request.args.get('id')
+    try:
+        transcript = youtube_client.get_transcript(id)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+    llm_context_size=4096*4
+    n_questions = ceil(youtube_client.get_duration(id) / 60) // 5
+    
     try: 
-        qas = ak.generate(id)
+        qas = ak.generate(transcript, n_questions=n_questions, context_size=llm_context_size)
         return jsonify(qas)
     except Exception as e:
         return jsonify({"error": str(e)}), 500

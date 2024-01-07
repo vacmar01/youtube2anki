@@ -16,13 +16,13 @@ const app = new Vue({
             this.startLoading();
             this.error = '';
             const response = await fetch('/api/anki?id=' + this.youtubeId);
+            const json = await response.json();
             if (response.status === 500) {
                 this.error = 'There was an error processing your request. Please make sure you enter a valid YouTube URL.';
                 this.loading = false;
                 this.finished = false;
                 return;
             }
-            const json = await response.json();
             this.questionAnswers = json;
             this.stopLoading();
         },

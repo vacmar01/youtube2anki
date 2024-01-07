@@ -1,4 +1,3 @@
-from math import ceil
 from tqdm import trange
 from .utils import sluggify
 import json
@@ -21,28 +20,20 @@ class AnkiCards:
         Answer only with the json string, nothing else. This is very important!
         """
         
-    def generate(self, id, block_size=4096*4):
-        try:
-            transcript = self.youtube_client.get_transcript(id)
-        except Exception as e:
-            return e
+    def generate(self, text, n_questions, context_size=4096*4):
         results = []
-
-        n_blocks = ceil(len(transcript) / block_size)
-        n_questions = ceil(self.youtube_client.get_duration(id) / 60) // 5
-        n_questions_per_block = n_questions // n_blocks
         
-        for i in trange(0, len(transcript), block_size):
-            chunk = transcript[i:i+block_size]
+        range = trange(0, len(text), context_size)
+        n_questions_per_block = n_questions // len(range)
+        for i in range:
+            chunk = text[i:i+context_size]
             prompt = self.get_prompt(chunk, n_questions_per_block)
             outp = self.llm_client.query(prompt)
             outp_text = outp["output"]["choices"][0]["text"]
             print(outp_text)
             try:
                 result = json.loads(outp_text)
-                result = json.loads(outp_text)
                 results.extend(result)
-                
             except:
                 print("Error")
                 print(outp_text)
