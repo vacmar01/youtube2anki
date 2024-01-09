@@ -51,7 +51,7 @@
             takes ca. 30s)</div>
         <!-- end loading indicator -->
 
-        <div v-if="finished && !loading" class="prose prose-lg mx-auto mt-8">
+        <div v-if="finished && !loading" class="prose sm:prose-lg mx-auto mt-8">
             <h2>Question/Answer Pairs</h2>
             <button @click="generateCSV" class="btn btn-neutral">Download .txt file</button>
             <div v-for="qa in questionAnswers">
