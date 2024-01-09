@@ -7,27 +7,38 @@
     <title>Youtube2Anki</title>
     <!-- load vue js from cdn -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.5.0/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"> -->
 </head>
 
 <body>
-    <div id="app">
-        <h1>Youtube2Anki</h1>
-        <p>Enter a youtube url below. This app will generate questions and their answers that let's you test your understanding of the topic. 
-            You can download the questions and answers as a text file. 
-            This text file can be imported into Anki with each question/answer pair being a card.</p>
-        <div class="form">
-            <input type="text" name="url" id="url" v-model="url" placeholder="Youtube URL">
-            <button @click="getQAs">Generate Q/As</button>
+    <div id="app" class="mx-auto px-8" style="max-width:960px">
+        <div class="navbar bg-base-100">
+            <a class="btn btn-ghost text-xl">Youtube2Anki</a>
         </div>
-        <div v-if="error">Error: [[error]]</div>
+        <h1 class="text-2xl sm:text-6xl font-bold my-8 text-center">Generate <span class="text-primary">Anki Cards</span> from <span class="text-primary">Youtube Videos</span></h1>
+        <p class="text-lg sm:text-2xl my-8 text-center">Enter a valid <span class="text-primary">Youtube URL</span> below.</p>
+        <div>
+            <input type="text" name="url" id="url" v-model="url" placeholder="Youtube URL" class="input input-bordered sm:input-lg w-full mx-auto block mx-4" />
+            <button class="btn btn-primary sm:input-lg mt-8 mx-auto w-1/2 block" @click="getQAs">
+                <span v-if="!loading">Generate Q/As</span>
+                <span v-if="loading" class="loading loading-spinner loading-lg block"></span>
+            </button>
+        </div>
+        <div role="alert" class="alert alert-error mt-8" v-if="error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>Error: [[error]]</span>
+          </div>
         <!-- loading indicator -->
-        <div v-if="loading" class="loader"></div>
-        <div v-if="loading" style="margin-top: 0.5rem; text-align:center;">Computing for [[ loadingSeconds ]]s...(this takes ca. 30s)</div>
+        
+        <div v-if="loading" class="mt-4 text-center">Computing for [[ loadingSeconds ]]s...(this
+            takes ca. 30s)</div>
         <!-- end loading indicator -->
-        <div v-if="finished && !loading">
+
+        <div v-if="finished && !loading" class="prose prose-lg mx-auto mt-8">
             <h2>Question/Answer Pairs</h2>
-            <button @click="generateCSV">Download .txt file</button>
+            <button @click="generateCSV" class="btn btn-neutral">Download .txt file</button>
             <div v-for="qa in questionAnswers">
                 <h3>[[ qa.question ]]</h3>
                 <p>[[ qa.answer ]]</p>
