@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Youtube2Anki</title>
     <!-- load vue js from cdn -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.5.0/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <!-- <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"> -->
@@ -25,15 +25,18 @@
                 </a>
             </div>
         </div>
-        <h1 class="text-2xl sm:text-6xl font-bold my-8 text-center">Generate <span class="text-primary">Anki
-                Cards</span> from <span class="text-primary">Youtube Videos</span></h1>
-        <p class="text-lg sm:text-2xl my-8 text-center">Enter a valid <span class="text-primary">Youtube URL</span>
-            below.</p>
+        <h1 class="text-2xl sm:text-6xl font-bold my-8 text-center">Turn Any <span class="text-primary">Youtube Video</span> into <span class="text-primary">Anki Cards</span>. No Login Required.</h1>
+        <p class="text-lg sm:text-2xl my-8 text-center">
+            1. Enter a valid <span class="text-primary">Youtube URL</span> below. <br>
+            2. We create questions (and their answers) to test your understanding of the topic of the video.<br>
+            3. Download the <span class="text-primary">Anki cards</span> and import them into the app.
+        </p>
+        <p class="text-lg sm:text-2xl my-8 text-center text-success font-bold">Try it out for free now.</p>
         <div>
             <input type="text" name="url" id="url" v-model="url" placeholder="Youtube URL"
                 class="input input-bordered sm:input-lg w-full mx-auto block mx-4" />
             <button class="btn btn-primary sm:input-lg mt-8 mx-auto w-1/2 block" @click="getQAs">
-                <span v-if="!loading">Generate Q/As</span>
+                <span v-if="!loading">Generate Anki Cards</span>
                 <span v-if="loading" class="loading loading-spinner loading-lg block"></span>
             </button>
         </div>
