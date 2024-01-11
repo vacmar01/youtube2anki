@@ -13,6 +13,10 @@ const app = new Vue({
     methods: {
         // call localhost:5000/anki to get all qas using async await
         async getQAs() {
+            if (this.url === '') {
+                this.error = 'Please enter a YouTube URL.';
+                return;
+            }
             this.startLoading();
             this.error = '';
             const response = await fetch('/api/anki?id=' + this.youtubeId);
