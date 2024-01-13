@@ -47,7 +47,7 @@ class LLMClient:
             "max_tokens": 1024,
             "prompt": f"[INST] {prompt} [/INST]",
             "request_type": "language-model-inference",
-            "temperature": 0.7,
+            "temperature": 0.3,
             "top_p": 0.7,
             "top_k": 50,
             "repetition_penalty": 1,
