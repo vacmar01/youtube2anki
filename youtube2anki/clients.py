@@ -60,5 +60,5 @@ class LLMClient:
         }, headers={
             "Authorization": f"Bearer {self.api_key}",
         })
-        return res.json()
+        return res.json()["output"]["choices"][0]["text"]
     

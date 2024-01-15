@@ -10,7 +10,10 @@ class AnkiCards:
     
     def get_prompt(self, chunk, n=3): 
         
-        return f""" Generate {n} questions with correct and concise answers for the following youtube transcript to test your understanding of the content. 
+        return f""" Generate {n} questions with correct answers for the following youtube transcript to test the user's understanding of the video's content.
+    
+        Questions should vary in complexity, ranging from basic understanding to deeper analysis. Answers should be paraphrased from the transcript unless a direct quote is more appropriate. Keep questions and answers concise, ideally not exceeding 256 characters each.
+         
         Provide the questions and answers as valid json in the following format:
 
         [{{"question": "question text", "answer": "answer text"}}, {{"question": "question text", "answer": "answer text"}} ... ]
@@ -28,8 +31,7 @@ class AnkiCards:
         for i in range:
             chunk = text[i:i+context_size]
             prompt = self.get_prompt(chunk, n_questions_per_block)
-            outp = self.llm_client.query(prompt)
-            outp_text = outp["output"]["choices"][0]["text"]
+            outp_text = self.llm_client.query(prompt)
             print(outp_text)
             try:
                 result = json.loads(outp_text)
