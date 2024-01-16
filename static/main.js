@@ -17,8 +17,8 @@ const app = new Vue({
                 this.error = 'Please enter a YouTube URL.';
                 return;
             }
-            this.startLoading();
             this.error = '';
+            this.startLoading();
             const response = await fetch('/api/anki?id=' + this.youtubeId);
             const json = await response.json();
             if (response.status === 500) {

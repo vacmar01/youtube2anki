@@ -6,6 +6,9 @@ from youtube2anki.ankicards import AnkiCards
 import os
 import json
 from math import ceil
+import instructor
+from instructor import Mode
+from openai import OpenAI
 
 from dotenv import load_dotenv
 
@@ -18,9 +21,14 @@ together_session_id = os.getenv('TOGETHER_SESSION_ID')
 app = Flask(__name__)
 
 youtube_client = YoutubeClient(youtube_api_key)
-llm_client = LLMClient(together_api_key, together_session_id)
 
-ak = AnkiCards(youtube_client, llm_client)
+llm_client = instructor.patch(OpenAI(
+  api_key=os.environ.get("TOGETHER_API_KEY"),
+  base_url='https://api.together.xyz',
+), mode=Mode.MD_JSON)
+
+ak = AnkiCards(youtube_client, llm_client, model_name="mistralai/Mixtral-8x7B-Instruct-v0.1"
+)
 
 @app.route("/", methods=["GET"])
 def index():
