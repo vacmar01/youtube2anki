@@ -2,7 +2,7 @@
 
 This is a simple app that let's you create custom [Anki](https://apps.ankiweb.net/) cards from a youtube video. 
 
-Right now I'm for my radiology board exam and and there is [this great youtube playlist](https://www.youtube.com/playlist?list=PLPcImQzEnTpz-5TzxyyoYSbiAa9xdd89l) explaining the basics of MRI technology. I want to learn MRI with these videos and I'm a big fan of Anki and spaced repetition in general. 
+Right now I'm studying for my radiology board exam and and there is [this great youtube playlist](https://www.youtube.com/playlist?list=PLPcImQzEnTpz-5TzxyyoYSbiAa9xdd89l) explaining the basics of MRI technology. I want to learn MRI with these videos and I'm a big fan of Anki and spaced repetition in general. 
 
 *So I thought:* Let's use the "Magic of AI" to turn the transcript of Youtube videos into questions and answers that I can import into Anki as cards. 
 
