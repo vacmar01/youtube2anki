@@ -1,5 +1,3 @@
-# write a flask api with a single endpoint /anki that calls the AnkiCard generate method and returns the result
-
 from flask import Flask, request, jsonify, render_template
 from youtube2anki.clients import YoutubeClient, LLMClient
 from youtube2anki.ankicards import AnkiCards
@@ -25,7 +23,6 @@ ak = AnkiCards(youtube_client, llm_client)
 @app.route("/", methods=["GET"])
 def index():
     return render_template('index.html')
-    
 
 @app.route("/api/anki", methods=["GET"])
 def generate():
@@ -43,5 +40,3 @@ def generate():
         return jsonify(qas)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-        
-    
