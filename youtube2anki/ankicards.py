@@ -2,7 +2,7 @@ from tqdm import trange
 from .utils import sluggify
 import json
 import pandas as pd
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, Field
 
 from typing import Any, List
 import json
@@ -10,16 +10,9 @@ import json
 
 class Topics(BaseModel):
     """
-    The three specific main topics of the transcript
+    The specific main topics of the transcript
     """
-    topics: list[str]
-    
-    @model_validator(mode='before')
-    @classmethod
-    def validate_questions(cls, data):
-        if str(data)[0] == "[": # if the first character is a bracket, assume it's a list of questions
-            return {'topics': data}
-        return data
+    topics: list[str] = Field(..., min_items=3, max_items=3)
     
 class QuestionAnswer(BaseModel):
     """
@@ -33,17 +26,10 @@ class QuestionAnswers(BaseModel):
     A list of question and answer pairs that test the user's understanding of the topic of the transcript
     """
     questions: list[QuestionAnswer]
-    
-    @model_validator(mode='before')
-    @classmethod
-    def validate_questions(cls, data):
-        if str(data)[0] == "[": # if the first character is a bracket, assume it's a list of questions
-            return {'questions': data}
-        return data
         
 
 class AnkiCards:
-    def __init__(self, youtube_client, llm_client, model_name="NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO"):
+    def __init__(self, youtube_client, llm_client, model_name="mistralai/Mixtral-8x7B-Instruct-v0.1"):
         self.model_name = model_name
         self.youtube_client = youtube_client
         self.llm_client = llm_client
@@ -57,31 +43,31 @@ class AnkiCards:
         Transcript: {chunk}"""
         
     def get_qas(self, prompt):
-        return self.llm_client.chat.completions.create(
-        model=self.model_name,
-        response_model=QuestionAnswers,
-        temperature=0.1,
-        max_retries=3,
-        messages=[
-            {
-                "role": "user", 
-                "content": prompt
-            },
-        ],
-    )
+        qas = self.llm_client.chat.completions.create(
+            model=self.model_name,
+            response_model=QuestionAnswers,
+            temperature=0.2,
+            messages=[
+                {
+                    "role": "user", 
+                    "content": prompt
+                },
+            ],
+        )
+        
+        return qas.questions
         
     def get_topics(self, chunk):
         topics = self.llm_client.chat.completions.create(
-        model=self.model_name,
-        response_model=Topics,
-        max_retries=3,
-        messages=[
-            {
-                "role": "user", 
-                "content": f"extract the three main topics from the following video transcript: {chunk}"
-            },
-        ],
-        temperature=0.2,
+            model=self.model_name,
+            response_model=Topics,
+            messages=[
+                {
+                    "role": "user", 
+                    "content": f"extract the three main topics from the following video transcript: {chunk}"
+                },
+            ],
+            temperature=0.2,
         )
 
         return topics.topics
@@ -97,4 +83,4 @@ class AnkiCards:
             prompt = self.get_prompt(chunk, n_questions_per_block, self.get_topics(chunk))
             qas = self.get_qas(prompt)
             results.append(qas)
-        return list(set([json.loads(x.model_dump_json()) for x in qas.questions for qas in results]))
+        return list(set([json.loads(x.model_dump_json()) for x in qas]))

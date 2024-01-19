@@ -23,9 +23,9 @@ app = Flask(__name__)
 youtube_client = YoutubeClient(youtube_api_key)
 
 llm_client = instructor.patch(OpenAI(
-  api_key=os.environ.get("TOGETHER_API_KEY"),
-  base_url='https://api.together.xyz',
-), mode=Mode.MD_JSON)
+  api_key=os.environ.get("ANYSCALE_API_KEY"),
+  base_url='https://api.endpoints.anyscale.com/v1',
+), mode=Mode.JSON)
 
 ak = AnkiCards(youtube_client, llm_client, model_name="mistralai/Mixtral-8x7B-Instruct-v0.1"
 )
