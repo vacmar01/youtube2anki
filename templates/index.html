@@ -6,10 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Youtube2Anki</title>
     <!-- load vue js from cdn -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.5.0/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"> -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+        integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+        crossorigin="anonymous"></script>
+    <style>
+        .htmx-indicator{
+            display:none;
+        }
+
+        .htmx-request .htmx-indicator{
+            display:block;
+        }
+
+        .htmx-request.htmx-indicator{
+            display:block;
+        }
+    </style>
 </head>
 
 <body>
@@ -25,51 +39,45 @@
                 </a>
             </div>
         </div>
-        <h1 class="text-2xl sm:text-6xl font-bold my-8 text-center">Turn Any <span class="text-primary">Youtube Video</span> into <span class="text-primary">Anki Cards</span>. No Login Required.</h1>
+        <h1 class="text-2xl sm:text-6xl font-bold my-8 text-center">Turn Any <span class="text-primary">Youtube
+                Video</span> into <span class="text-primary">Anki Cards</span>. No Login Required.</h1>
         <p class="text-lg sm:text-2xl my-8 text-center max-w-lg mx-auto">
             1. Enter a valid <span class="text-primary">Youtube URL</span> below. <br>
             2. We create questions (and their answers) to test your understanding of the video.<br>
             3. Download the <span class="text-primary">Anki cards</span> and import them into the app.
         </p>
         <p class="text-lg sm:text-2xl my-8 text-center text-success font-bold">Try it out for free now.</p>
-        <div>
-            <input type="text" name="url" id="url" v-model="url" placeholder="Youtube URL"
-                class="input input-bordered sm:input-lg w-full mx-auto block mx-4" />
-            <button class="btn btn-primary sm:input-lg mt-8 mx-auto w-1/2 block" @click="getQAs">
-                <span v-if="!loading">Generate Anki Cards</span>
-                <span v-if="loading" class="loading loading-spinner loading-lg block"></span>
-            </button>
-        </div>
-        <div role="alert" class="alert alert-error mt-8" v-if="error">
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>Error: [[error]]</span>
-        </div>
+        <form hx-get="/api/anki" hx-target="#results" hx-indicator="#loading" class="form-control">
+            <input
+            type="text" 
+            name="url" 
+            id="url" 
+            placeholder="Youtube URL"
+            class="input input-bordered sm:input-lg w-full mx-auto block mx-4" 
+            required />
+
+            <input 
+            type="submit" 
+            class="btn btn-primary text-primary hover:text-white sm:input-lg mt-8 mx-auto w-1/2 block" 
+            value="Generate Anki Cards" />
+        </form>
+
         <!-- loading indicator -->
 
-        <div v-if="loading" class="mt-4 text-center">Computing for [[ loadingSeconds ]]s...(this
-            takes ca. 30s)</div>
+        <div class="mt-8 text-center htmx-indicator" id="loading">
+            <span class="loading loading-spinner loading-lg"></span>
+            <span class="mt-6 text-center block">Computing...(this takes ca. 30s)</span>
+        </div>
         <!-- end loading indicator -->
 
-        <div v-if="finished && !loading" class="prose sm:prose-lg mx-auto mt-8">
-            <h2>Question/Answer Pairs</h2>
-            <button @click="generateCSV" class="btn btn-neutral">Download .txt file</button>
-            <div v-for="qa in questionAnswers">
-                <h3>[[ qa.question ]]</h3>
-                <p>[[ qa.answer ]]</p>
-            </div>
-        </div>
+        <div id="results"></div>
         <div class="divider mt-24"></div>
         <footer class="text-center pb-4">
-            
-            Created by Marius (<a class="underline hover:opacity-70" href="https://twitter.com/rasmus1610">@rasmus1610</a>)
+
+            Created by Marius (<a class="underline hover:opacity-70"
+                href="https://twitter.com/rasmus1610">@rasmus1610</a>)
         </footer>
     </div>
-
-    <script src="{{url_for('static', filename='main.js')}}"></script>
     <script defer data-domain="youtube2anki.fly.dev" src="https://plausible.io/js/script.js"></script>
 </body>
 

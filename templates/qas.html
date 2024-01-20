@@ -1,0 +1,10 @@
+<div class="prose sm:prose-lg mx-auto mt-8">
+    <h2>Question/Answer Pairs</h2>
+    <button @click="generateCSV" class="btn btn-neutral">Download .txt file</button>
+    {% for qa in qas %}
+        <div>
+            <h3>{{ qa.question }}</h3>
+            <p>{{ qa.answer }}</p>
+        </div>
+    {% endfor %}
+</div>
