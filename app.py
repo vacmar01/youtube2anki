@@ -1,9 +1,10 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, render_template
 from youtube2anki.clients import YoutubeClient, LLMClient
 from youtube2anki.ankicards import AnkiCards
 import os
 import json
 from math import ceil
+from urllib.parse import urlparse, parse_qs
 
 from dotenv import load_dotenv
 
@@ -20,23 +21,33 @@ llm_client = LLMClient(together_api_key, together_session_id)
 
 ak = AnkiCards(youtube_client, llm_client)
 
+def youtube_id(url):
+    parsed_url = urlparse(url)
+    print(parsed_url)
+    
+    if not 'youtu' in parsed_url.netloc or parsed_url.netloc == '':
+        print("Not a youtube url")
+        raise ValueError("Not a youtube url")
+
+    if 'youtu.be' in parsed_url.netloc:
+        return parsed_url.path.split('/')[-1].split('?')[0]
+    
+    query_params = parse_qs(parsed_url.query)
+    return query_params.get('v', [None])[0]
+
 @app.route("/", methods=["GET"])
 def index():
     return render_template('index.html')
 
 @app.route("/api/anki", methods=["GET"])
 def generate():
-    id = request.args.get('id')
+    url = request.args.get('url')
     try:
+        id = youtube_id(url)
         transcript = youtube_client.get_transcript(id)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    
-    llm_context_size=4096*4
-    n_questions = ceil(youtube_client.get_duration(id) / 60) // 5
-    
-    try: 
+        llm_context_size=4096*4
+        n_questions = ceil(youtube_client.get_duration(id) / 60) // 5
         qas = ak.generate(transcript, n_questions=n_questions, context_size=llm_context_size)
-        return jsonify(qas)
+        return render_template('qas.html', qas=qas)
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return render_template('error.html', error=str(e))
