@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, render_template
 from youtube2anki.clients import YoutubeClient, LLMClient
 from youtube2anki.ankicards import AnkiCards
 import os
