@@ -1,7 +1,6 @@
 from tqdm import trange
 from .utils import sluggify
 import json
-import pandas as pd
 
 class AnkiCards:
     def __init__(self, youtube_client, llm_client):

@@ -302,3 +302,4 @@ fly.toml
 Procfile
 .dockerignore
 *.ipynb
+notebooks

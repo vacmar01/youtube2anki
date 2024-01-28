@@ -1,0 +1,14 @@
+{% extends "cards/layout.html" %}
+{% block content %}
+<h1 class="text-2xl sm:text-4xl mb-12">
+    All Videos
+</h1>
+
+{% for video in videos %}
+<ul>
+    <li><a href="/videos/{{video.id}}">{{ video.title }} - {{ video.channel }}</a></li>
+</ul>
+{% endfor %}
+
+{% endblock %}
+
