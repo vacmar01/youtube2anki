@@ -2,10 +2,8 @@ from urllib.parse import urlparse, parse_qs
 
 def youtube_id(url):
     parsed_url = urlparse(url)
-    print(parsed_url)
     
     if not 'youtu' in parsed_url.netloc or parsed_url.netloc == '':
-        print("Not a youtube url")
         raise ValueError("Not a youtube url")
 
     if 'youtu.be' in parsed_url.netloc:

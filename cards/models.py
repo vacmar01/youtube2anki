@@ -29,7 +29,7 @@ class Video(models.Model):
             video = cls.objects.get(video_id=youtube_id)
         except cls.DoesNotExist:
             details = youtube_client.get_details(youtube_id)
-            print(details)
+            
             video = Video()
             video.video_id = youtube_id
             video.title = details['title']

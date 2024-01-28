@@ -18,13 +18,12 @@ class YoutubeClient:
     def get_details(self, id):
         data = self.get_data(id)
         transcript = self.get_transcript(id)
-        duration = self.get_duration(id)
         
         details = {
             'title': data['items'][0]['snippet']['title'],
             'channel': data['items'][0]['snippet']['channelTitle'],
             'transcript': transcript,
-            'duration': parse_duration(data["items"][0]["contentDetails"]["duration"]),
+            'duration': parse_duration(data["items"][0]["contentDetails"]["duration"]).seconds,
         }
         
         return details

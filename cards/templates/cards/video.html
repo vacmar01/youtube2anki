@@ -1,7 +1,7 @@
 {% extends "cards/layout.html" %}
 {% block content %}
 <div class="prose sm:prose-lg mx-auto mt-8">
-    <h2>{{ video.title }} - {{ video.channel }}</h2>
+    <h2 class="mb-2">{{ video.title }} - {{ video.channel }}</h2>
     <button @click="generateTxt()" class="btn btn-neutral">Download .txt file</button>
     </form>
     {% for qa in video.questionanswer_set.all %}
