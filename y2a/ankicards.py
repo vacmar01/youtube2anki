@@ -1,26 +1,41 @@
 from tqdm import trange
-from .utils import sluggify
 import json
+from pydantic import BaseModel, Field
 
+class QuestionAnswer(BaseModel):
+    """
+    A question and answer pair that can be used to generate an anki card.
+    """
+    id: int = Field(..., description="monotonically increasing id")
+    question: str
+    answer: str
+
+class QuestionAnswerSet(BaseModel):
+    """
+    A set of question and answer pairs that can be used to generate an anki deck.
+    """
+
+    questions: list[QuestionAnswer] = Field(..., description="list of questions and answers")
+    
 class AnkiCards:
     def __init__(self, youtube_client, llm_client):
         self.youtube_client = youtube_client
         self.llm_client = llm_client
     
-    def get_prompt(self, chunk, n=3): 
+    def get_questions_and_answers(self, chunk, n_questions):
+        qas = self.llm_client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"Generate {n_questions} question and answers for this video transcript: \n{chunk}",
+                }
+            ],
+            model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+            response_model=QuestionAnswerSet,
+            )
         
-        return f""" Generate {n} questions with correct answers for the following youtube transcript to test the user's understanding of the video's content.
+        return qas.questions
     
-        Questions should vary in complexity, ranging from basic understanding to deeper analysis. Answers should be paraphrased from the transcript unless a direct quote is more appropriate. Keep questions and answers concise, ideally not exceeding 256 characters each.
-         
-        Provide the questions and answers as valid json in the following format:
-
-        [{{"question": "question text", "answer": "answer text"}}, {{"question": "question text", "answer": "answer text"}} ... ]
-
-        Transcript: {chunk}
-
-        Answer only with the json string, nothing else. This is very important!
-        """
         
     def generate(self, text, n_questions, context_size=4096*4):
         results = []
@@ -29,13 +44,7 @@ class AnkiCards:
         n_questions_per_block = n_questions // len(range)
         for i in range:
             chunk = text[i:i+context_size]
-            prompt = self.get_prompt(chunk, n_questions_per_block)
-            outp_text = self.llm_client.query(prompt)
-            print(outp_text)
-            try:
-                result = json.loads(outp_text)
-                results.extend(result)
-            except:
-                print("Error")
-                print(outp_text)
+            qas = self.get_questions_and_answers(chunk, n_questions_per_block)
+            print(qas)
+            results.extend(qas)
         return results

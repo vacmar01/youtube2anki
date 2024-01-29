@@ -4,11 +4,22 @@
     All Videos
 </h1>
 
-{% for video in videos %}
-<ul>
-    <li><a class="my-2 text-lg sm:text-xl hover:bg-gray-700 p-2 rounded-lg block" href="/videos/{{video.id}}">{{ video.title }} - {{ video.channel }}</a></li>
-</ul>
-{% endfor %}
+<div class="overflow-x-auto">
+    <table class="table sm:table-lg">
+      <!-- head -->
+      <tbody>
+        <!-- row 1 -->
+        {% for video in videos %}
+        <tr>
+          <td>{{ video.title }}</td>
+          <td>{{ video.channel }}</td>
+          <td><a class="underline text-success hover:opacity-70" href="/videos/{{video.id}}">Details</a></td>
+        </tr>
+        {% endfor %}
+        <!-- row 2 -->
+      </tbody>
+    </table>
+  </div>
 
 {% endblock %}
 

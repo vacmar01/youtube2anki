@@ -20,7 +20,7 @@ class Video(models.Model):
         llm_context_size = 4096 * 4
         qas = ankicards.generate(self.transcript, n_questions=n_questions, context_size=llm_context_size)
         for qa in qas:
-            QuestionAnswer.objects.create(video=self, question=qa['question'], answer=qa['answer'])
+            QuestionAnswer.objects.create(video=self, question=qa.question, answer=qa.answer)
     
     @classmethod
     def create_or_get_video(cls, youtube_id):

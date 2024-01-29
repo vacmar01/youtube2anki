@@ -27,31 +27,4 @@ class YoutubeClient:
         }
         
         return details
-
-class LLMClient:
-    def __init__(self, api_key, session_id):
-        self.api_key = api_key
-        self.session_id = session_id
-        self.endpoint = 'https://api.together.xyz/inference'
-    
-    def query(self, prompt):
-        res = requests.post(self.endpoint, json={
-            "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
-            "max_tokens": 1024,
-            "prompt": f"[INST] {prompt} [/INST]",
-            "request_type": "language-model-inference",
-            "temperature": 0.3,
-            "top_p": 0.7,
-            "top_k": 50,
-            "repetition_penalty": 1,
-            "stop": [
-                "[/INST]",
-                "</s>"
-            ],
-            "negative_prompt": "",
-            "sessionKey": f"{self.session_id}"
-        }, headers={
-            "Authorization": f"Bearer {self.api_key}",
-        })
-        return res.json()["output"]["choices"][0]["text"]
     

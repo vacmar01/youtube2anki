@@ -10,6 +10,7 @@ from .models import Video, QuestionAnswer
 def index(request):
     context = {
         'questionCount': QuestionAnswer.objects.count(),
+        'videoCount': Video.objects.count(),
     }
     return render(request, 'cards/index.html', context=context)
 

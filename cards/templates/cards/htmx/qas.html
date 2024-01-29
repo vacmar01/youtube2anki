@@ -1,6 +1,6 @@
 <div class="prose sm:prose-lg mx-auto mt-8">
     <h2>{{ video.title }} - {{ video.channel }}</h2>
-    <button @click="generateTxt()" class="btn btn-neutral">Download .txt file</button>
+    <button @click="generateTxt()" class="btn btn-success">Download .txt file</button>
     {% for qa in qas %}
         <div class="qa-pair">
             <h3 class="question">{{ qa.question }}</h3>
