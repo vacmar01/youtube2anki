@@ -2,7 +2,7 @@
 {% block content %}
 <div class="prose sm:prose-lg mx-auto mt-8">
     <h2 class="mb-2">{{ video.title }} - {{ video.channel }}</h2>
-    <button @click="generateTxt()" class="btn btn-success">Download .txt file</button>
+    <button onclick="generateTxt()" class="btn btn-success">Download .txt file</button>
     </form>
     {% for qa in video.questionanswer_set.all %}
         <div class="qa-pair">

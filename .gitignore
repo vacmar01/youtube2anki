@@ -303,3 +303,4 @@ Procfile
 .dockerignore
 *.ipynb
 notebooks
+staticfiles
