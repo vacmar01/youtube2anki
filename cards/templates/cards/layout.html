@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% include "cards/partials/head.html" %}
+
+<body>
+    <div class="mx-auto px-8" style="max-width:960px">
+        {% include "cards/partials/navbar.html" %}
+        {% block content %}{% endblock %}
+        {% include "cards/partials/footer.html" %}
+    </div>
+    <script defer data-domain="youtube2anki.fly.dev" src="https://plausible.io/js/script.tagged-events.js"></script>
+    <script src="{% static 'cards/main.js' %}"></script>
+</body>
+
+</html>

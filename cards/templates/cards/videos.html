@@ -1,0 +1,25 @@
+{% extends "cards/layout.html" %}
+{% block content %}
+<h1 class="text-2xl sm:text-6xl my-12 text-center font-bold text-primary">
+    All Videos
+</h1>
+
+<div class="overflow-x-auto">
+    <table class="table sm:table-lg">
+      <!-- head -->
+      <tbody>
+        <!-- row 1 -->
+        {% for video in videos %}
+        <tr>
+          <td>{{ video.title }}</td>
+          <td>{{ video.channel }}</td>
+          <td><a class="underline text-success hover:opacity-70" href="/videos/{{video.id}}">Details</a></td>
+        </tr>
+        {% endfor %}
+        <!-- row 2 -->
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}
+
