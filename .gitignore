@@ -302,5 +302,10 @@ fly.toml
 Procfile
 .dockerignore
 *.ipynb
+<<<<<<< Updated upstream
 notebooks
 staticfiles
+=======
+staticfiles
+notebooks
+>>>>>>> Stashed changes
