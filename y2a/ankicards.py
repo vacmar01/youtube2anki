@@ -8,7 +8,7 @@ class QuestionAnswer(BaseModel):
     """
     id: int = Field(..., description="monotonically increasing id")
     question: str
-    answer: str
+    answer: str = Field(..., description="very concise answer to the question")
 
 class QuestionAnswerSet(BaseModel):
     """
