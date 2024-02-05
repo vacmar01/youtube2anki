@@ -10,5 +10,23 @@
         <a class="btn btn-ghost" href="https://github.com/vacmar01/youtube2anki" target="_blank">
             Github
         </a>
+        {% if user.is_authenticated %}
+        <a class="btn btn-ghost" href="/users/profile">
+            Profile
+        </a>
+        <form method="post" action="/users/logout/">
+            {% csrf_token %}
+            <button class="btn btn-ghost" type="submit">
+                Logout
+            </button>
+        </form>
+        {% else %}
+        <a class="btn btn-ghost" href="/users/register">
+            Register
+        </a>
+        <a class="btn btn-ghost" href="/users/login">
+            Login
+        </a>
+        {% endif %}
     </div>
 </div>

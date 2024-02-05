@@ -1,0 +1,27 @@
+{% extends 'cards/layout.html' %}
+{% block content %}
+<div class="mx-auto">
+    <h2 class="text-2xl mb-8 text-center">Login</h2>
+    <form method="post" action="{% url 'login' %}" class="form-control mx-auto">
+        {% csrf_token %}
+        <div class="mb-2 mx-auto">
+            <label for="id_username" class="block">Email:</label>
+            <input type="email" name="username" id="id_username" class="input input-bordered w-full max-w-xs" required>
+            {% if form.email.errors %}
+                <div class="error">{{ form.username.errors.as_text }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-2 mx-auto">
+            <label for="id_password" class="block">Password:</label>
+            <input type="password" name="password" id="id_password" class="input input-bordered w-full max-w-xs" required>
+            {% if form.password1.errors %}
+                <div class="error">{{ form.password.errors.as_text }}</div>
+            {% endif %}
+        </div>
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        <button type="submit" class="btn btn-neutral max-w-xs mx-auto">Login</button>
+    </form>
+</div>
+
+{% endblock %}

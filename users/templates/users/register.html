@@ -1,0 +1,35 @@
+{% extends 'cards/layout.html' %}
+{% block content %}
+<div class="mx-auto">
+    <h2 class="text-2xl mb-8 text-center">Register</h2>
+    <form method="post" class="form-control mx-auto">
+        {% csrf_token %}
+        <div class="mb-2 mx-auto">
+            <label for="id_email" class="block">Email:</label>
+            <input type="email" name="email" id="id_email" class="input input-bordered w-full max-w-xs" required>
+            {% if form.email.errors %}
+                <div class="error">{{ form.email.errors.as_text }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-2 mx-auto">
+            <label for="id_password1" class="block">Password:</label>
+            <input type="password" name="password1" id="id_password1" class="input input-bordered w-full max-w-xs" required>
+            {% if form.password1.errors %}
+                <div class="error">{{ form.password1.errors.as_text }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="mb-2 mx-auto">
+            <label for="id_password2" class="block">Password confirmation:</label>
+            <input type="password" name="password2" id="id_password2" class="input input-bordered w-full max-w-xs" required>
+            {% if form.password2.errors %}
+                <div class="error">{{ form.password2.errors.as_text }}</div>
+            {% endif %}
+        </div>
+        
+        <button type="submit" class="btn btn-neutral max-w-xs mx-auto">Register</button>
+    </form>
+</div>
+
+{% endblock %}

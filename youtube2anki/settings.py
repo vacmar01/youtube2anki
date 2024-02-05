@@ -33,10 +33,16 @@ DEBUG = os.environ.get('DEBUG') == 'True'
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",") if os.environ.get("ALLOWED_HOSTS") else []
 CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS").split(",") if os.environ.get("CSRF_TRUSTED_ORIGINS") else []
 
+# URL Configuration
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/users/login/'
+
 
 # Application definition
 
 INSTALLED_APPS = [
+    'users.apps.UsersConfig',
     'cards.apps.CardsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -90,6 +96,8 @@ DATABASES = {
     )
 }
 
+# Custom User Model
+AUTH_USER_MODEL = "users.User"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
