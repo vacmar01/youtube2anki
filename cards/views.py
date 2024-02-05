@@ -24,6 +24,11 @@ def generate(request):
                 
         video = Video.create_or_get_video(video_id)
         
+        #if a user is logged in, associate the video with the user
+        if request.user.is_authenticated:
+            video.user.add(request.user)
+            video.save()
+        
         if not video.questionanswer_set.exists():
             video.generate_questions_and_answers()
         
@@ -31,7 +36,7 @@ def generate(request):
         context['qas'] = video.questionanswer_set.all()
 
     except Exception as e:
-        context['error'] = str(e)
+        context['error'] = 'An error occured. Please try again.'
         template_name = 'cards/htmx/error.html'
         
     return render(request, template_name, context=context)

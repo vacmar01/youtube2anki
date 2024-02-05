@@ -1,5 +1,25 @@
 {%extends 'cards/layout.html' %}
 {%block content%}
-<h2>Hey there</h2>
-<p>Email {{user.email}}</p>
+<h2 class="text-2xl mb-8">Hey there, {{user.email}}</h2>
+{% if user.videos.count > 0 %}
+<h3 class="text-xl mb-4">Here are your videos:</h3>
+<div class="overflow-x-auto">
+    <table class="table sm:table-lg">
+        <!-- head -->
+        <tbody>
+            <!-- row 1 -->
+            {% for video in user.videos.all %}
+            <tr>
+                <td>{{ video.title }}</td>
+                <td>{{ video.channel }}</td>
+                <td><a class="underline text-success hover:opacity-70" href="/videos/{{video.id}}">Details</a></td>
+            </tr>
+            {% endfor %}
+            <!-- row 2 -->
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>You don't have any videos yet</p>
+{% endif %}
 {%endblock%}

@@ -11,6 +11,7 @@ class Video(models.Model):
     duration = models.IntegerField()
     transcript = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ManyToManyField('users.User', related_name='videos', blank=True)
     
     def __str__(self):
         return f"{self.title} - {self.channel}"
