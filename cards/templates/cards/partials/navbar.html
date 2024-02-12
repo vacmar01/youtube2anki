@@ -3,7 +3,7 @@
         <a href="/" class="btn btn-ghost text-xl">Youtube2Anki</a>
     </div>
 
-    <div class="flex-none">
+    <div class="flex-none" hx-boost="true">
         <a class="btn btn-ghost" href="/videos">
             All Videos
         </a>
@@ -11,9 +11,9 @@
             Github
         </a>
         {% if user.is_authenticated %}
-        <a class="btn btn-ghost" href="/users/profile">
+        <!-- <a class="btn btn-ghost" href="/users/profile">
             Profile
-        </a>
+        </a> -->
         <form method="post" action="/users/logout/">
             {% csrf_token %}
             <button class="btn btn-ghost" type="submit">
@@ -21,12 +21,12 @@
             </button>
         </form>
         {% else %}
-        <a class="btn btn-ghost" href="/users/register">
+        <!-- <a class="btn btn-ghost" href="/users/register">
             Register
         </a>
         <a class="btn btn-ghost" href="/users/login">
             Login
-        </a>
+        </a> -->
         {% endif %}
     </div>
 </div>

@@ -10,7 +10,7 @@
       <tbody>
         <!-- row 1 -->
         {% for video in videos %}
-        <tr>
+        <tr hx-boost="true">
           <td>{{ video.title }}</td>
           <td>{{ video.channel }}</td>
           <td><a class="underline text-success hover:opacity-70" href="/videos/{{video.id}}">Details</a></td>
