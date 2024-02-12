@@ -17,11 +17,29 @@ class Video(models.Model):
         return f"{self.title} - {self.channel}"
     
     def generate_questions_and_answers(self):
-        n_questions = ceil(self.duration / 60) // 5
-        llm_context_size = 4096 * 4
-        qas = ankicards.generate(self.transcript, n_questions=n_questions, context_size=llm_context_size)
-        for qa in qas:
-            QuestionAnswer.objects.create(video=self, question=qa.question, answer=qa.answer)
+        # Ensure TaskStatus exists for this video
+        task_status, _ = TaskStatus.objects.get_or_create(video=self)
+
+        try:
+            # Update the task status to indicate processing has started
+            task_status.status = 'pending'
+            task_status.save()
+
+            # Your existing logic to generate questions and answers
+            n_questions = ceil(self.duration / 60) // 5
+            llm_context_size = 4096 * 4
+            qas = ankicards.generate(self.transcript, n_questions=n_questions, context_size=llm_context_size)
+            for qa in qas:
+                QuestionAnswer.objects.create(video=self, question=qa.question, answer=qa.answer)
+
+            # Update the task status to indicate completion
+            task_status.status = 'complete'
+            task_status.save()
+        except Exception as e:
+            # Update the task status to indicate failure and store the error message
+            task_status.status = 'failed'
+            task_status.result = str(e)
+            task_status.save()
     
     @classmethod
     def create_or_get_video(cls, youtube_id):
@@ -40,6 +58,14 @@ class Video(models.Model):
             video.save()
         
         return video
+
+class TaskStatus(models.Model):
+    video = models.OneToOneField(Video, on_delete=models.CASCADE, related_name='task_status')
+    status = models.CharField(max_length=10)  # e.g., "pending", "complete", "failed"
+    result = models.TextField(null=True, blank=True)  # Optional field for storing results or errors
+
+    def __str__(self):
+        return f"{self.video.id} - {self.status}"
     
 class QuestionAnswer(models.Model):
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
@@ -49,3 +75,4 @@ class QuestionAnswer(models.Model):
     
     def __str__(self):
         return f"{self.question} - {self.answer}"
+
