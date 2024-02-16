@@ -2,10 +2,11 @@ from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from .youtube_utils import youtube_id
+import threading
 import os
 from math import ceil
 
-from .models import Video, QuestionAnswer
+from .models import Video, QuestionAnswer, TaskStatus
 
 def index(request):
     context = {
@@ -28,15 +29,29 @@ def generate(request):
         if request.user.is_authenticated:
             video.user.add(request.user)
             video.save()
+            
+        task_status, created = TaskStatus.objects.get_or_create(video=video)
         
         if not video.questionanswer_set.exists():
-            video.generate_questions_and_answers()
-        
-        context['video'] = video
-        context['qas'] = video.questionanswer_set.all()
+            task_status = TaskStatus.objects.get_or_create(video=video)[0]
+            
+            if task_status.status not in ['pending', 'complete']:
+                # Start the long-running task in a background thread
+                print('start thread')
+                thread = threading.Thread(target=video.generate_questions_and_answers)
+                thread.daemon = True
+                thread.start()
+                template_name = 'cards/htmx/pending.html'
+            elif task_status.status == 'pending':
+                template_name = 'cards/htmx/pending.html'
+            elif task_status.status == 'complete':
+                context['qas'] = video.questionanswer_set.all()
+        else:
+            context['qas'] = video.questionanswer_set.all()
 
+        context['video'] = video
     except Exception as e:
-        context['error'] = 'An error occured. Please try again.'
+        context['error'] = str(e)
         template_name = 'cards/htmx/error.html'
         
     return render(request, template_name, context=context)

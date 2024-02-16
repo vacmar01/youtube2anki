@@ -1,0 +1,9 @@
+<div
+     hx-get="{% url 'generate' %}?url=https://youtube.com/watch?v={{ video.video_id }}" 
+     hx-trigger="load delay:2s"
+     hx-swap="outerHTML">
+     <div class="mt-8 text-center">
+        <span class="loading loading-spinner loading-lg"></span>
+        <span class="mt-6 text-center block">Computing...(this takes ca. 30s)</span>
+    </div>
+</div>
