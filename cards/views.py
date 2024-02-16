@@ -15,20 +15,6 @@ def index(request):
     }
     return render(request, 'cards/index.html', context=context)
 
-def generate_questions_and_answers(video):
-    # Wrapper function to run the long task and update task status
-    try:
-        video.generate_questions_and_answers()  # Your long-running task
-        TaskStatus.objects.update_or_create(
-            youtube_video_id=video.id,
-            defaults={'status': 'complete'}
-        )
-    except Exception as e:
-        TaskStatus.objects.update_or_create(
-            youtube_video_id=video.id,
-            defaults={'status': 'failed', 'result': str(e)}
-        )
-
 def generate(request):
     url = request.GET.get('url')
     context = {}
